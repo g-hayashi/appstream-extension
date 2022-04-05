@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body id="body">
+  <div class="container">
+    <h2>Command key Persistence</h2>
+    <div>
+      <input type="radio" id="command-control" name="command">
+      <label for="command-control">command-as-control</label>
+    </div>
+
+    <div>
+      <input type="radio" id="command-meta" name="command">
+      <label for="command-meta">command-as-meta</label>
+    </div>
+
+    <h2>Screen Resolution Persistence</h2>
+    <div>
+      <input type="radio" id="screen-auto" name="screen">
+      <label for="screen-auto">Auto</label>
+    </div>
+
+    <div>
+      <input type="radio" id="screen-keep" name="screen">
+      <label for="screen-keep">Keep</label>
+    </div>
+
+    <h2>Quality/Performance Persistence</h2>
+    <div>
+      <input type="radio" id="streaming-smooth" name="streaming">
+      <label for="streaming-smooth">Best Performanceh</label>
+    </div>
+
+    <div>
+      <input type="radio" id="streaming-sharp" name="streaming">
+      <label for="streaming-sharp">Best Quality</label>
+    </div>
+
+    <h2>Hide/Show menubar</h2>
+    <div>
+      <input type="radio" id="menubar-show" name="menubar">
+      <label for="menubar-show">show menubar</label>
+    </div>
+    <div>
+      <input type="radio" id="menubar-hide" name="menubar">
+      <label for="menubar-hide">hide menubar</label>
+    </div>
+  </div>
+  <script type="text/javascript" src="popup.js"></script>
+</body>
+
+</html>
