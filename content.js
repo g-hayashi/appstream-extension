@@ -11,75 +11,50 @@ const aFunc = async function (val) {
 
 
 function gotMessage(message, sender, callback) {
-  cmd = message.cmd
-  key = message.key
-  val = message.val
-  console.log("message " + cmd + ":" + key + ":" + val)
-  if (cmd == "set") {
-    switch (key) {
-      case "command":
-        document.getElementById("button-use-command-as-" + val).click()
-        cmd_save("command-persistence", val)
-        break;
-      case "streaming":
-        aFunc(val)
-        cmd_save("streaming-persistence", val)
-        break
-      case "screen":
-        document.getElementsByClassName("button-settings-resolution-" + val)[0].click()
-        cmd_save("screen-persistence", val)
-        break;
-      case "menubar":
-        if (val == "show") {
-          document.getElementById("toolbar-content").style.height = "45px"
-          document.getElementById("toolbar-content").style.display = ""
-        } else if (val == "hide") {
-          document.getElementById("toolbar-content").style.height = "0px"
-          document.getElementById("toolbar-content").style.display = "none"
-        }
-        cmd_save("menubar-persistence", val)
-    }
-  } else if (cmd == "get") {
-    cmd_load(key + "-persistence", function (value) {
-      callback(value)
-    })
+  key = message.key; val = message.val
+  switch (key) {
+    case "command":
+      document.getElementById("button-use-command-as-" + val).click()
+      break;
+    case "streaming":
+      aFunc(val)
+      break
+    case "screen":
+      document.getElementsByClassName("button-settings-resolution-" + val)[0].click()
+      break;
+    case "init":
+      init()
+      break;
   }
 }
 
 
-function cmd_load(key, func) {
-  val = localStorage.getItem(key)
-  func(val)
+function config_load(key, func) {
+  chrome.storage.local.get(key, function (config) {
+    func(config[key])
+  });
 }
 
-function cmd_save(key, val) {
-  localStorage.setItem(key, val)
-}
 
 function init() {
-  cmd_load("command-persistence", function (value) {
+  config_load("command", function (value) {
     if (value == "meta" || value == "control") {
-      gotMessage({ "cmd": "set", "key": "command", "val": value })
+      gotMessage({ "key": "command", "val": value })
     }
   });
 
-  cmd_load("streaming-persistence", function (value) {
+  config_load("streaming", function (value) {
     if (value == "smooth" || value == "sharp") {
-      gotMessage({ "cmd": "set", "key": "streaming", "val": value })
+      gotMessage({ "key": "streaming", "val": value })
     }
   });
 
-  cmd_load("screen-persistence", function (value) {
+  config_load("screen", function (value) {
     if (value == "keep" || value == "auto") {
-      gotMessage({ "cmd": "set", "key": "screen", "val": value })
+      gotMessage({ "key": "screen", "val": value })
     }
   });
 
-  cmd_load("menubar-persistence", function (value) {
-    if (value == "show" || value == "hide") {
-      gotMessage({ "cmd": "set", "key": "menubar", "val": value })
-    }
-  });
 }
 
 // レンダリング完了まで待つ
@@ -88,18 +63,22 @@ function waitForElement(callback, intervalMs, timeoutMs) {
   findLoop();
 
   function findLoop() {
-    if (document.getElementsByClassName("button-settings")[0] != null &&
-      document.getElementsByClassName("button-settings")[0].disabled != false) {
+    if (document.getElementById("streaming-status") != null &&
+      document.getElementById("streaming-status").getAttribute("data-is-streaming-ready") == "true") {
+      sleep(10000)
+      console.log("made a callback ")
       callback();
       return;
     } else {
-      console.log("waiting " + intervalMs)
       setTimeout(() => {
-        if (timeoutMs && Date.now() - startTimeInMs > timeoutMs) return;
+        if (timeoutMs && Date.now() - startTimeInMs > timeoutMs) {
+          console.log("timeout " + timeoutMs + " ms")
+          return;
+        }
         findLoop();
       }, intervalMs);
     }
   }
 }
 
-waitForElement(function () { init() }, 3000, 600000)
+waitForElement(function () { init() }, 5000, 500000)

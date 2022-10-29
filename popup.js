@@ -1,79 +1,56 @@
-function cmd_send(cmd, key, val, callback) {
+function send(key, val, callback) {
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     if (!tabs[0].url.includes('appstream2')) {
       return
     }
-    chrome.tabs.sendMessage(tabs[0].id, { "cmd": cmd, "key": key, "val": val }, callback);
+    chrome.tabs.sendMessage(tabs[0].id, { "key": key, "val": val }, callback);
   });
+  // https://qiita.com/kmagai/items/95481a3b9fd97e4616c9
+  chrome.storage.local.set({ [key]: val }, function () {
+  })
 }
 
-function cmd_load(key, func) {
-  val = localStorage.getItem(key)
-  console.log('Value currently is ' + val);
-  func(val)
+function config_load(key, func) {
+  chrome.storage.local.get(key, function (config) {
+    func(config[key])
+  });
 }
 
 document.getElementById('command-control').addEventListener("click",
-  function () {
-    cmd_send("set", "command", "control")
-  });
+  function () { send("command", "control") });
 
 document.getElementById('command-meta').addEventListener("click",
-  function () {
-    cmd_send("set", "command", "meta")
-  });
+  function () { send("command", "meta") });
 
 document.getElementById('streaming-smooth').addEventListener("click",
-  function () {
-    cmd_send("set", "streaming", "smooth")
-  });
+  function () { send("streaming", "smooth") });
 
 document.getElementById('streaming-sharp').addEventListener("click",
-  function () {
-    cmd_send("set", "streaming", "sharp")
-  });
+  function () { send("streaming", "sharp") });
 
 document.getElementById('screen-auto').addEventListener("click",
-  function () {
-    cmd_send("set", "screen", "auto")
-  });
+  function () { send("screen", "auto") });
 
 document.getElementById('screen-keep').addEventListener("click",
-  function () {
-    cmd_send("set", "screen", "keep")
-  });
+  function () { send("screen", "keep") });
 
-document.getElementById('menubar-show').addEventListener("click",
-  function () {
-    cmd_send("set", "menubar", "show")
-  });
+document.getElementById('init').addEventListener("click",
+  function () { send("init", "") });
 
-document.getElementById('menubar-hide').addEventListener("click",
-  function () {
-    cmd_send("set", "menubar", "hide")
-  });
-
-
-cmd_send("get", "command", "", function (value) {
+config_load("command", function (value) {
   if (value == "meta" || value == "control") {
     document.getElementById("command-" + value).checked = true;
   }
 });
 
-cmd_send("get", "streaming", "", function (value) {
+config_load("streaming", function (value) {
   if (value == "smooth" || value == "sharp") {
     document.getElementById("streaming-" + value).checked = true;
   }
 });
 
-cmd_send("get", "screen", "", function (value) {
+config_load("screen", function (value) {
   if (value == "keep" || value == "auto") {
     document.getElementById("screen-" + value).checked = true;
-  }
-});
-
-cmd_send("get", "menubar", "", function (value) {
-  if (value == "show" || value == "hide") {
-    document.getElementById("menubar-" + value).checked = true;
   }
 });
