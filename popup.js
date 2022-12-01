@@ -34,6 +34,12 @@ document.getElementById('screen-auto').addEventListener("click",
 document.getElementById('screen-keep').addEventListener("click",
   function () { send("screen", "keep") });
 
+document.getElementById('menu-visible').addEventListener("click",
+  function () { send("menu", "visible") });
+
+document.getElementById('menu-hidden').addEventListener("click",
+  function () { send("menu", "hidden") });
+
 document.getElementById('init').addEventListener("click",
   function () { send("init", "") });
 
@@ -52,5 +58,11 @@ config_load("streaming", function (value) {
 config_load("screen", function (value) {
   if (value == "keep" || value == "auto") {
     document.getElementById("screen-" + value).checked = true;
+  }
+});
+
+config_load("menu", function (value) {
+  if (value == "visible" || value == "hidden") {
+    document.getElementById("menu-" + value).checked = true;
   }
 });

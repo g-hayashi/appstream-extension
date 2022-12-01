@@ -10,7 +10,7 @@
 
 <body id="body">
   <div class="container">
-    <h2>Command key Persistence</h2>
+    <h2>Command key Persistence(macOS only)</h2>
     <div>
       <input type="radio" id="command-control" name="command">
       <label for="command-control">command-as-control</label>
@@ -43,7 +43,17 @@
       <label for="streaming-sharp">Best Quality</label>
     </div>
 
-    <input type="button" id="init" name="init">
+    <h2>Menu Visibility with Fullscreen</h2>
+    <div>
+      <input type="radio" id="menu-visible" name="menu">
+      <label for="menu-visible">visible</label>
+    </div>
+    <div>
+      <input type="radio" id="menu-hidden" name="menu">
+      <label for="menu-hidden">hidden</label>
+    </div>
+    <br>
+    <input type="button" id="init" name="init" value="init">
 
   </div>
   <script type="text/javascript" src="popup.js"></script>

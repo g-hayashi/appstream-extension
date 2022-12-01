@@ -1,6 +1,6 @@
 {
   "name": "appstream_helper",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "manifest_version": 3,
   "description": "appstream helper app",
   "author": "ginji hayashi",

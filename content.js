@@ -14,17 +14,31 @@ function gotMessage(message, sender, callback) {
   key = message.key; val = message.val
   switch (key) {
     case "command":
-      document.getElementById("button-use-command-as-" + val).click()
-      break;
+      try {
+        document.getElementById("button-use-command-as-" + val).click()
+      } catch (error) {
+        // might run under windows
+      }
+      break
     case "streaming":
       aFunc(val)
       break
     case "screen":
       document.getElementsByClassName("button-settings-resolution-" + val)[0].click()
-      break;
+      break
+    case "menu":
+      if (document.getElementsByClassName('toolbar-container toolbar-unpinned toolbar-compressed')[0] != undefined) {
+        v = val
+      } else {
+        v = "visible"
+      }
+      document.getElementById("toolbar-content").style.visibility = v
+      document.getElementsByClassName("toolbar-handle")[0].style.visibility = v
+      console.log(v)
+      break
     case "init":
       init()
-      break;
+      break
   }
 }
 
@@ -54,7 +68,14 @@ function init() {
       gotMessage({ "key": "screen", "val": value })
     }
   });
+}
 
+function checking() {
+  config_load("menu", function (value) {
+    if (value == "hidden" || value == "visible") {
+      gotMessage({ "key": "menu", "val": value })
+    }
+  });
 }
 
 // レンダリング完了まで待つ
@@ -82,3 +103,4 @@ function waitForElement(callback, intervalMs, timeoutMs) {
 }
 
 waitForElement(function () { init() }, 5000, 500000)
+setInterval(checking, 5000);
